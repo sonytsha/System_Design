@@ -1,0 +1,336 @@
+RESOURCES : 
+
+https://www.geeksforgeeks.org/database-sharding-a-system-design-concept/
+https://www.youtube.com/watch?v=5faMjKuB9bc
+
+
+https://stackoverflow.com/questions/18302773/what-are-horizontal-and-vertical-partitions-in-database-and-what-is-the-differen
+https://medium.com/@jeeyoungk/how-sharding-works-b4dec46b3f6
+https://medium.com/@jeeyoungk/why-i-love-databases-1d4cc433685f
+https://www.quora.com/What-is-the-difference-between-consistent-hashing-and-sharding-in-a-distributed-system
+https://en.wikipedia.org/wiki/Partition_(database
+https://www.amazon.in/gp/product/B06XPJML5D/ref=as_li_tl?ie=UTF8&camp=3638&creative=24630&creativeASIN=B06XPJML5D&linkCode=as2&tag=gkcs0a3-21&linkId=740f26a12dce6b256e1c0225a54f9acc
+
+
+What is Database Sharding?
+Sharding means breaking a large database into smaller, manageable pieces (shards) and spreading them across multiple servers. Each shard contains a portion of the database, but together, they form the complete dataset.
+
+Analogy
+Imagine you’re managing a library with a million books. If you keep all the books in one big room (one database), it becomes:
+
+Hard to search for a book.
+Slow to retrieve or add books.
+Overloaded if many people come at once.
+Instead, you split the library into sections (shards):
+
+One section for fiction, another for non-fiction, one for science, etc.
+Now, when someone wants a book, they go directly to the relevant section, making everything faster and more organized.
+
+
+Why Shard a Database?
+Databases grow as applications or websites attract more users. Sharding solves problems like:
+
+Performance issues: Queries take too long as the database grows.
+Scalability issues: A single server can't handle millions of users.
+Storage issues: The database grows too big for one machine.
+
+
+Key Concepts in Database Sharding
+1. Horizontal Partitioning
+Sharding is a form of horizontal partitioning.
+Instead of storing all data in one table, rows are distributed across shards.
+Example:
+Imagine a table with user records:
+sql
+Copy code
+UserID | Name   | Email
+------------------------
+1      | Alice  | alice@example.com
+2      | Bob    | bob@example.com
+3      | Charlie| charlie@example.com
+After sharding:
+Shard 1: UserID 1-1000.
+Shard 2: UserID 1001-2000.
+Each shard has its own database.
+2. Shard Key
+A shard key decides how data is split between shards.
+It’s a column or combination of columns, like UserID or Region.
+Example:
+Use UserID % Number_of_Servers to decide which shard stores a user.
+If UserID = 123 and Number_of_Servers = 3:
+123 % 3 = 0, so data goes to Shard 0.
+
+3. Distributed Queries
+With sharding, a query might need to search multiple shards.
+For example, finding all users requires asking all shards and combining results.
+Optimizing queries is crucial to avoid performance issues.
+4. Data Distribution Strategies
+There are three main ways to distribute data across shards:
+
+Range-based Sharding:
+
+Data is divided into ranges based on the shard key.
+Example: Users with IDs 1–1000 go to Shard 1, 1001–2000 to Shard 2.
+Hash-based Sharding:
+
+Use a hash function to distribute data.
+Example: hash(UserID) % Number_of_Servers.
+Geographic/Location-based Sharding:
+
+Data is divided based on geography or regions.
+Example: Users from Asia go to Shard 1, Europe to Shard 2.
+
+
+5. Benefits of Sharding
+Improved Performance: Queries are faster since each shard handles a smaller dataset.
+Scalability: You can add more shards (servers) as your data grows.
+Reliability: If one shard fails, others continue working.
+
+6. Challenges of Sharding
+Complexity:
+Sharding requires changes to the application logic to handle multiple databases.
+Rebalancing Data:
+If shards grow unevenly, data must be redistributed, which is tricky.
+Cross-shard Queries:
+Joining data from multiple shards can be slow and complex.
+
+When Should You Use Sharding?
+When to consider sharding:
+Your database has grown too large for a single machine.
+You need to handle millions of users or high query loads.
+When NOT to shard:
+Your database is small and can be handled by a single server.
+
+Example Scenarios
+Scenario 1: E-Commerce Website
+A website with millions of customers and orders.
+Sharding strategy:
+Use CustomerID as the shard key.
+Split customer data across multiple shards.
+
+Scenario 2: Social Media Platform
+Millions of posts from users worldwide.
+Sharding strategy:
+Use Region as the shard key.
+Divide data into geographic regions.
+
+Terms Related to Database Sharding
+Replication
+Before sharding, many systems use replication, where the entire database is copied to multiple servers.
+Sharding complements replication by splitting data and distributing it.
+
+Load Balancing
+Distributes traffic evenly among shards to prevent overload on a single server.
+
+Resharding
+Adjusting shard boundaries or adding/removing shards as data grows or shrinks.
+
+Advantages vs. Disadvantages of Sharding
+Advantages	Disadvantages
+Scales horizontally by adding shards	Increased complexity in queries
+Reduces load on each server	Difficult to rebalance data
+Improves query performance	Cross-shard joins are expensive
+Isolates failures to individual shards	Application logic must handle shards
+Comparison: Sharding vs. Partitioning
+Aspect	Sharding	Partitioning
+Definition	Spreads data across multiple servers.	Splits data within a single server.
+Scale	Horizontally scalable (add servers).	Limited to one server.
+Use Case	Distributed systems.	Single-server databases.
+
+Real-World Examples
+YouTube: Shards video data by video ID.
+Facebook: Shards user data by region.
+Amazon: Shards product data by category or region.
+
+INTERVIEW QUESTIONS : 
+
+1. What is Database Sharding? Why is it needed?
+Answer:
+Database Sharding is the process of splitting a large database into smaller, manageable pieces called shards and storing them on different servers.
+
+Why needed:
+
+Scalability: A single server cannot handle huge amounts of data or traffic.
+Performance: Queries become faster because each shard holds only part of the data.
+Reliability: If one shard fails, others remain operational.
+
+2. What is the difference between Sharding and Partitioning?
+Answer:
+
+Aspect	Sharding	Partitioning
+Definition	Splits data across multiple servers.	Splits data into segments on a single server.
+Scale	Horizontal scaling (more servers).	Limited to vertical scaling (one server).
+Use Case	For large, distributed systems.	For single-server databases.
+
+3. What are the main strategies for sharding?
+Answer:
+
+Range-based Sharding:
+
+Data is split into ranges based on a key (e.g., UserID 1-1000 in Shard 1, 1001-2000 in Shard 2).
+Advantage: Simple to implement.
+Disadvantage: Can lead to uneven data distribution.
+Hash-based Sharding:
+
+A hash function determines the shard for each record (e.g., hash(UserID) % Number_of_Servers).
+Advantage: Better load distribution.
+Disadvantage: Rebalancing is complex when adding servers.
+Geographic Sharding:
+
+Data is divided by regions (e.g., Asia in Shard 1, Europe in Shard 2).
+Advantage: Ideal for location-specific use cases.
+Disadvantage: Users in one region can overload a single shard.
+
+4. What is a Shard Key, and why is it important?
+Answer:
+A shard key is the column or combination of columns used to determine how data is distributed across shards.
+
+Importance:
+
+Ensures even data distribution.
+Impacts query performance.
+Determines shard scalability.
+Example: If UserID is the shard key:
+
+UserID 101 may go to Shard 1.
+UserID 102 may go to Shard 2.
+
+5. What are the benefits of database sharding?
+Answer:
+
+Improved Performance: Queries are faster because each shard processes less data.
+Scalability: Add more shards as data grows.
+Fault Isolation: If one shard fails, others keep working.
+Distributed Workload: Reduces pressure on a single server.
+
+6. What are the challenges or disadvantages of sharding?
+Answer:
+
+Increased Complexity: Application logic must handle multiple shards.
+Cross-shard Queries: Joining data across shards is slow and complex.
+Data Rebalancing: When shards grow unevenly, redistributing data is hard.
+Operational Overhead: Backup and monitoring are more complex with multiple shards.
+
+7. How does sharding handle scalability?
+Answer:
+Sharding achieves horizontal scalability by:
+
+Adding new shards (servers) to accommodate more data.
+Distributing data across shards so each server handles only a subset.
+This avoids the limitations of vertical scaling, where you can only add more resources (RAM, CPU) to a single server.
+
+8. What happens when you add or remove shards in a sharded database?
+Answer:
+
+Adding a shard:
+Rehash data or redefine ranges.
+Redistribute part of the data to the new shard.
+Removing a shard:
+Reassign its data to other shards.
+Challenge:
+Both processes require careful handling to minimize downtime and ensure consistency.
+
+
+9. How do you handle cross-shard queries?
+Answer: Cross-shard queries are needed when data spans multiple shards.
+
+Techniques to handle:
+
+Query all shards and combine results at the application level.
+Use a coordinator node to handle distributed queries.
+Downside: Slower performance due to multiple database calls.
+
+
+10. What is Resharding? When is it needed?
+Answer:
+Resharding is the process of redistributing data among shards, usually when:
+
+Shards become unbalanced (one shard grows faster than others).
+New shards are added to handle growth.
+Example:
+
+Initially, UserID 1-1000 in Shard 1, 1001-2000 in Shard 2.
+After adding Shard 3, redistribute as UserID 1-500 to Shard 1, 501-1000 to Shard 2, and 1001-1500 to Shard 3.
+
+11. What are the alternatives to database sharding?
+Answer:
+
+Replication: Copy the entire database to multiple servers.
+Good for read-heavy applications but not scalable for writes.
+Vertical Partitioning: Split tables by columns (e.g., user info in one database, orders in another).
+Limited scalability compared to sharding.
+Caching: Use in-memory stores like Redis to reduce database load.
+12. What are virtual shards? Why are they used?
+Answer:
+Virtual shards are logical shards that map to physical shards.
+
+They allow flexible redistribution without directly involving physical shards.
+Example: Map 10 virtual shards to 2 physical servers initially. If a third server is added, redistribute the virtual shards.
+Benefit: Simplifies rebalancing.
+
+13. How does sharding work in distributed databases like MongoDB or Cassandra?
+Answer:
+
+MongoDB:
+
+Uses a shard key to distribute documents.
+Manages sharding automatically with a config server.
+Cassandra:
+
+Uses consistent hashing for automatic sharding.
+Data is distributed evenly across nodes in a cluster.
+14. What is the difference between Sharding and Replication?
+Answer:
+
+Aspect	Sharding	Replication
+Definition	Splits data across servers.	Copies the same data to multiple servers.
+Scalability	Horizontal scalability for both read/write.	Improves read scalability only.
+Use Case	High-volume read and write workloads.	Read-heavy applications.
+15. Can you give a real-world example of database sharding?
+Answer:
+
+Example: Facebook sharding user data.
+User profiles are distributed by UserID across multiple shards.
+Each shard handles a subset of user profiles, improving scalability and performance.
+16. What is Shard Balancing?
+Answer:
+Shard balancing ensures data is evenly distributed across all shards to prevent one shard from becoming a hotspot (overloaded).
+
+Steps:
+
+Monitor shard usage.
+Redistribute data if some shards are overloaded.
+17. What is the role of a Shard Manager?
+Answer:
+A Shard Manager is responsible for:
+
+Keeping track of which shard holds which data.
+Redirecting queries to the correct shard.
+Handling shard addition/removal.
+18. How do you choose the right Shard Key?
+Answer:
+Choose a shard key that:
+
+Distributes data evenly across shards.
+Matches common query patterns.
+Minimizes cross-shard queries.
+Example:
+
+For a user database, UserID is a good shard key because it’s evenly distributed.
+19. What are the limitations of database sharding?
+Answer:
+
+Complexity: Adds overhead in query handling and application logic.
+Cross-shard Transactions: Hard to maintain atomicity.
+Operational Challenges: Backup, restore, and monitoring are more complex.
+20. What are some tools and databases that support sharding?
+Answer:
+
+MongoDB: Automatic sharding with a config server.
+Cassandra: Uses consistent hashing for sharding.
+MySQL: Manual implementation of sharding.
+PostgreSQL: Supports table partitioning and sharding through extensions.
+
+
+
+
