@@ -1,0 +1,184 @@
+RESOURCES :
+https://www.geeksforgeeks.org/consistent-hashing/
+https://www.youtube.com/watch?v=zaRkONvyGr8
+https://www.hackerearth.com/practice/data-structures/hash-tables/basics-of-hash-tables/tutorial/
+https://michaelnielsen.org/blog/consistent-hashing/
+
+
+Hashing
+Imagine you have a set of lockers (like in a gym), each with a unique number, and you want to store your belongings in one of them. To decide which locker to use, you:
+
+Pick an Item: Say you have a bag.
+Use a Formula: Use a simple rule or formula (e.g., Bag's weight % Number of lockers) to decide which locker to use.
+Store It: If the formula gives you locker number 3, you store your bag in locker 3.
+Later, if you want to retrieve the bag, you just apply the same formula to find the right locker.
+
+Key Points about Hashing:
+It maps data (like your bag) to a specific location (locker).
+A hash function determines where the data goes.
+It’s fast and helps organize data for quick retrieval.
+
+
+
+
+Consistent Hashing
+Now, let’s make it more interesting. Imagine the gym keeps adding or removing lockers, but you don’t want to reshuffle all the belongings every time a locker is added or removed.
+
+How it works:
+Arrange Lockers in a Circle: Think of all the lockers placed in a circular layout.
+Assign Items to Lockers: When you have an item (like your bag), you use a formula to find its spot on the circle and assign it to the nearest locker in the clockwise direction.
+Adding/Removing Lockers:
+If a new locker is added, only items near that locker are affected.
+If a locker is removed, only the items from that locker move to the next one in the circle.
+Key Benefits:
+With consistent hashing, you minimize disruptions when lockers (or servers) are added or removed.
+It’s commonly used in systems like caching or load balancing, where stability is crucial.
+
+
+Everyday Comparison:
+Hashing: Like assigning students to fixed seats in a classroom using their roll number.
+Consistent Hashing: Like assigning students to seats in a circular classroom, and when new seats are added or removed, only a few students need to change seats.
+
+
+Visual Aid:
+Imagine a clock where:
+Each number (1 to 12) is a locker (or server).
+Items are assigned to numbers on the clock based on the hash function.
+If you add a locker at 6.5 (between 6 and 7), only items between 6 and 7 are affected.
+Now, every time you think about organizing or distributing things, visualize lockers in a circle, and you'll always remember consistent hashing!
+
+
+RELATED INTERVIEW QUESTIONS :
+
+1. What is Hashing? Explain with an example.
+Answer:
+Hashing is a technique to map data to fixed-size values, usually for efficient storage and retrieval. A hash function generates an index for a given input.
+
+Example:
+Consider storing student IDs in an array. Use a hash function like:
+index = ID % array_size.
+If the array size is 10 and the ID is 123, then 123 % 10 = 3, so the data is stored at index 3.
+
+2. What makes a good hash function?
+Answer:
+A good hash function should:
+
+Distribute data evenly: Avoid clustering (load balancing).
+Be deterministic: Always return the same hash for the same input.
+Be fast: Minimize computation time.
+Avoid collisions: Two different inputs should rarely have the same hash.
+3. What are collisions in hashing? How do you resolve them?
+Answer:
+A collision occurs when two different inputs produce the same hash value.
+
+Resolution Techniques:
+
+Chaining: Store all items with the same hash in a linked list or another data structure.
+Open Addressing:
+Linear Probing: Search for the next empty slot.
+Quadratic Probing: Search in a quadratic pattern (e.g., +1², +2²).
+Double Hashing: Use a second hash function for probing.
+4. What is the time complexity of hashing operations?
+Answer:
+
+Search/Insert/Delete:
+
+Average case: 
+𝑂
+(
+1
+)
+O(1) (constant time).
+Worst case: 
+𝑂
+(
+𝑛
+)
+O(n) (when many collisions occur, e.g., all items in one chain).
+Space complexity: Depends on the size of the hash table and collision handling.
+
+5. What is Consistent Hashing, and why is it used?
+Answer:
+Consistent Hashing is a specialized form of hashing that minimizes data movement when nodes (or servers) are added/removed. It’s commonly used in distributed systems, such as caching and load balancing.
+
+Use Cases:
+
+Distributed caching (e.g., Memcached, Redis).
+Load balancing in distributed servers.
+Sharding databases.
+6. How does Consistent Hashing work?
+Answer:
+
+Hash servers and data to points on a circular ring.
+Each data point is assigned to the nearest server clockwise.
+When a server is added/removed, only a subset of data (nearby points) is rehashed.
+7. What are the advantages of Consistent Hashing?
+Answer:
+
+Minimizes data movement during changes.
+Scalable: Works efficiently as nodes are added/removed.
+Uniform distribution of load.
+8. What are virtual nodes in Consistent Hashing?
+Answer:
+Virtual nodes (or "vnodes") are multiple points on the ring for a single physical node (server).
+Benefits:
+
+Better load balancing.
+Reduces uneven distribution due to non-uniform hash values.
+9. How does Consistent Hashing handle failures?
+Answer:
+
+When a server fails, its data is reassigned to the next server clockwise.
+Only a small subset of data moves, ensuring system stability.
+10. Compare Hashing and Consistent Hashing.
+Feature	Hashing	Consistent Hashing
+Purpose	Efficient data mapping and retrieval.	Minimize disruptions in dynamic systems.
+Data Movement	High when rehashing (e.g., resizing).	Minimal when adding/removing servers.
+Use Case	Hash tables, dictionaries.	Distributed systems (e.g., caching).
+11. What are some real-world applications of Consistent Hashing?
+Answer:
+
+Content Delivery Networks (CDNs): Assign content to servers.
+Distributed Caching: Tools like Memcached or Redis.
+Database Sharding: Partitioning data across database servers.
+Load Balancers: Assign client requests to backend servers.
+12. How do you design a system using Consistent Hashing?
+Answer:
+
+Use a hash function to assign servers and data to points on a circular ring.
+Map each server to multiple virtual nodes for better load balancing.
+Implement failover to reassign data when a server fails.
+Use tools like Rendezvous Hashing for additional flexibility.
+13. How does Consistent Hashing compare to Mod-based Hashing?
+Answer:
+
+Aspect	Mod-based Hashing	Consistent Hashing
+Rehashing Impact	Affects all keys.	Affects only a small subset.
+Scalability	Limited.	Highly scalable.
+Load Balancing	Hard to achieve with uneven distribution.	Achieves uniform load distribution.
+14. What are common pitfalls in implementing Consistent Hashing?
+Answer:
+
+Poor hash function: Leads to uneven load distribution.
+Not using virtual nodes: Can result in hotspots.
+High rehashing costs: If the hash function isn't efficient.
+15. Can you explain a real-world scenario where Consistent Hashing was necessary?
+Answer:
+Scenario:
+In a distributed caching system like Memcached, suppose you have 4 servers and store cached data on them. If one server fails:
+
+Without Consistent Hashing: All keys need to be rehashed, causing massive disruptions.
+With Consistent Hashing: Only keys assigned to the failed server are rehashed to the next server, minimizing disruptions.
+16. How do Distributed Hash Tables (DHTs) relate to Consistent Hashing?
+Answer:
+Distributed Hash Tables (e.g., in BitTorrent or Chord) use Consistent Hashing to:
+
+Assign data to specific nodes.
+Ensure efficient data lookup in peer-to-peer systems.
+17. How would you implement Consistent Hashing in code?
+Answer:
+
+Hash Function: Map servers and data to a circular ring.
+Ring Representation: Use a sorted data structure (e.g., TreeMap in Java).
+Virtual Nodes: Hash each server to multiple points on the ring.
+Lookup: For a data key, find the nearest server clockwise.
